@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <catalao>
+        <name>Catalão</name>
+        <temperature>24.564</temperature>
+        <scale>C</scale>
+    </catalao>
+    <goiania>
+        <name>Goiânia</name>
+        <temperature>22</temperature>
+        <scale>C</scale>
+    </goiania>
+    <uberlandia>
+        <name>Uberlândia</name>
+        <temperature>25.864</temperature>
+        <scale>C</scale>
+    </uberlandia>
+</root>
