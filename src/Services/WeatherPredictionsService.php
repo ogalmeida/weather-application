@@ -4,10 +4,6 @@ namespace App\Services;
 
 use App\Models\Predictions;
 use App\Models\WeatherSources;
-use App\Repositories\BBCWeatherRepository;
-use App\Repositories\OpenWeatherMapRepository;
-use App\Repositories\ClimaTempoWeatherRepository;
-use App\Repositories\DataSourceRepositoryInterface;
 
 class WeatherPredictionsService
 {

@@ -23,6 +23,6 @@ class CalculateWeatherPredictionService
 
         $predictionMedia /= $this->predictions->count();
 
-        return new Prediction(round($predictionMedia, 2), $this->predictions->current()->getCity());
+        return new Prediction(round($predictionMedia, 2), $this->predictions->current()->getCity(), $this->predictions->current()->getScale());
     }
 }

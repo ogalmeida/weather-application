@@ -20,7 +20,7 @@ class OpenWeatherMapRepository implements DataSourceRepositoryInterface
     {   
         $data = $this->getData();
         
-        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name']);
+        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], 'kelvin');
         $this->predictions->addPrediction($prediction);
     }
 

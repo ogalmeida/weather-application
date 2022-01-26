@@ -20,7 +20,7 @@ class BBCWeatherRepository implements DataSourceRepositoryInterface
     {
         $data = $this->getData();
         
-        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name']);
+        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], 'celsius');
 
         $this->predictions->addPrediction($prediction);
     }
