@@ -2,8 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Enums\TemperatureScale;
 use App\Models\Prediction;
-use App\Models\Predictions;
+use App\Collections\Predictions;
 use App\Repositories\DataSourceRepositoryInterface;
 
 class BBCWeatherRepository implements DataSourceRepositoryInterface
@@ -16,11 +17,11 @@ class BBCWeatherRepository implements DataSourceRepositoryInterface
         $this->predictions = $predictions;
     }
 
-    public function getAllWeatherInformation(string $city): void
+    public function fetchWeatherInformation(string $city): void
     {
         $data = $this->getData();
         
-        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], 'celsius');
+        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], TemperatureScale::celsius());
 
         $this->predictions->addPrediction($prediction);
     }

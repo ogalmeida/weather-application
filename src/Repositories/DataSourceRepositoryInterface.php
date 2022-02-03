@@ -4,5 +4,5 @@ namespace App\Repositories;
 
 interface DataSourceRepositoryInterface
 {
-    public function getAllWeatherInformation(string $city): void;
+    public function fetchWeatherInformation(string $city): void;
 }

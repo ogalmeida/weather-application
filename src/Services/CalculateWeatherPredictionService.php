@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use App\Models\Prediction;
-use App\Models\Predictions;
+use App\Collections\Predictions;
 
 class CalculateWeatherPredictionService
 {
-    private $predictions;
+    private Predictions $predictions;
 
     public function __construct(Predictions $predictions)
     {

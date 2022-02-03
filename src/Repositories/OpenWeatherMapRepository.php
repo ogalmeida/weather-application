@@ -2,9 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Enums\TemperatureScale;
 use Weather;
 use App\Models\Prediction;
-use App\Models\Predictions;
+use App\Collections\Predictions;
 
 class OpenWeatherMapRepository implements DataSourceRepositoryInterface
 {
@@ -16,11 +17,11 @@ class OpenWeatherMapRepository implements DataSourceRepositoryInterface
         $this->predictions = $predictions;
     }
 
-    public function getAllWeatherInformation(string $city): void
+    public function fetchWeatherInformation(string $city): void
     {   
         $data = $this->getData();
         
-        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], 'kelvin');
+        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], TemperatureScale::kelvin());
         $this->predictions->addPrediction($prediction);
     }
 

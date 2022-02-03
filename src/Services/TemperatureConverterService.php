@@ -2,24 +2,21 @@
 
 namespace App\Services;
 
-use App\Models\Predictions;
+use App\Enums\TemperatureScale;
+use App\Collections\Predictions;
 use App\Exceptions\IncorrectTemperatureException;
 
 class TemperatureConverterService
 {
-    private $predictions;
+    private Predictions $predictions;
 
     public function __construct(Predictions $predictions)
     {
         $this->predictions = $predictions;   
     }
 
-    public function standardizeValues(string $scale): void 
+    public function standardizeValues(TemperatureScale $scale): void 
     {
-        if (!self::checkScaleTo($scale)) {
-            throw new IncorrectTemperatureException('A escala destino (' . ucfirst($scale) . ') não é válida.');
-        }
-
         foreach ($this->predictions->jsonSerialize() as $prediction) {
             switch ($prediction->getScale()) {
                 case 'celsius':
@@ -32,7 +29,7 @@ class TemperatureConverterService
                     $convertedValue = self::convertFromKelvin($prediction->getTemp(), $scale);
                     break;
                 default:
-                    throw new IncorrectTemperatureException('A escala ' . $prediction->getScale() . ' não pode ser convertida para ' . ucfirst($scale));
+                    throw new IncorrectTemperatureException('A escala ' . $prediction->getScale() . ' não pode ser convertida para ' . ucfirst($scale->getScale()));
             }
 
             $prediction->setTemp($convertedValue);
@@ -40,14 +37,9 @@ class TemperatureConverterService
         }
     }
 
-    private static function checkScaleTo(string $scale): bool
+    private static function convertFromCelsius(int $value, TemperatureScale $to)
     {
-        return in_array(strtolower($scale), ['celsius', 'fahrenheit', 'kelvin']);
-    }
-
-    private static function convertFromCelsius(int $value, string $to)
-    {
-        switch ($to) {
+        switch ($to->getScale()) {
             case 'celsius':
                 return $value;
             case 'fahrenheit':
@@ -57,9 +49,9 @@ class TemperatureConverterService
         }
     }
 
-    private static function convertFromFahrenheit(int $value, string $to)
+    private static function convertFromFahrenheit(int $value, TemperatureScale $to)
     {
-        switch ($to) {
+        switch ($to->getScale()) {
             case 'celsius':
                 return ($value - 32) * 5/9;
             case 'fahrenheit':
@@ -69,9 +61,9 @@ class TemperatureConverterService
         }
     }
 
-    private static function convertFromKelvin(int $value, string $to)
+    private static function convertFromKelvin(int $value, TemperatureScale $to)
     {
-        switch ($to) {
+        switch ($to->getScale()) {
             case 'celsius':
                 return $value - 273.15;
             case 'fahrenheit':

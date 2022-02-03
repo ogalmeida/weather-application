@@ -16,7 +16,7 @@ class WeatherSources implements \Countable
 
     public function setSources(array $sources): void
     {
-        if (!count($sources)) {
+        if (empty($sources)) {
             throw new IncorrectDataSourceException('Não foi possível encontrar nenhuma fonte de dados.');
         }
 

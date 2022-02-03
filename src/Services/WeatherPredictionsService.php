@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Predictions;
+use App\Collections\Predictions;
 use App\Models\WeatherSources;
 
 class WeatherPredictionsService
 {
-    private $city;
-    private $weatherSources;
+    private string $city;
+    private WeatherSources $weatherSources;
 
     public function __construct(WeatherSources $weatherSources, string $city)
     {
@@ -21,15 +21,15 @@ class WeatherPredictionsService
         $predictions = new Predictions();
 
         foreach ($this->weatherSources->getSources() as $source) {
-            $this->getSourcesPrediction($source, $predictions);
+            $this->fetchSourcePrediction($source, $predictions);
         }
 
         return $predictions;
     }
 
-    private function getSourcesPrediction(string $source, Predictions $predictions): void
+    private function fetchSourcePrediction(string $source, Predictions $predictions): void
     {
         $obj = new $source($predictions);
-        $obj->getAllWeatherInformation($this->city);
+        $obj->fetchWeatherInformation($this->city);
     }
 }

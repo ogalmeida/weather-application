@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Enums\TemperatureScale;
 use App\Models\WeatherSources;
 use App\Repositories\BBCWeatherRepository;
 use App\Repositories\ClimaTempoWeatherRepository;
@@ -29,7 +30,7 @@ class WeatherController
             $predictions = $weatherPredictionsObj->getPredictions();
             
             $temperatureConverterObj = new TemperatureConverterService($predictions);
-            $temperatureConverterObj->standardizeValues('celsius');
+            $temperatureConverterObj->standardizeValues(TemperatureScale::celsius());
             
             $predictionMediaObj = new CalculateWeatherPredictionService($predictions);
             $prediction = $predictionMediaObj->calculatePrediction();
