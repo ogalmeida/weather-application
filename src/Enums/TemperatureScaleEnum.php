@@ -2,12 +2,12 @@
 
 namespace App\Enums;
 
-class TemperatureScale
+class TemperatureScaleEnum
 {
     private $scale;
 
     private const KELVIN = 'kelvin';
-    private const FAHRENHEIT = 'fharenheit';
+    private const FAHRENHEIT = 'fahrenheit';
     private const CELSIUS = 'celsius';
 
     public function __construct(string $scale)

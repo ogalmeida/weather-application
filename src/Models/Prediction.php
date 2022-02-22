@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use App\Enums\TemperatureScale;
+use App\Enums\TemperatureScaleEnum;
 
 class Prediction
 {
     private float $temp;
     private string $city;
-    private TemperatureScale $scale;
+    private TemperatureScaleEnum $scale;
 
-    public function __construct(float $temp, string $city, TemperatureScale $scale)
+    public function __construct(float $temp, string $city, TemperatureScaleEnum $scale)
     {
         $this->temp = $temp;
         $this->city = $city;
-        $this->scale = $scale->getScale();
+        $this->scale = $scale;
     }
 
     public function getTemp(): float
@@ -32,12 +32,12 @@ class Prediction
         return $this->city;
     }
 
-    public function getScale(): TemperatureScale
+    public function getScale(): TemperatureScaleEnum
     {
         return $this->scale;
     }
 
-    public function setScale(TemperatureScale $scale): void
+    public function setScale(TemperatureScaleEnum $scale): void
     {
         $this->scale = $scale;
     }

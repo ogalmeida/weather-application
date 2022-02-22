@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\TemperatureScale;
+use App\Enums\TemperatureScaleEnum;
 use App\Collections\Predictions;
 use App\Exceptions\IncorrectTemperatureException;
 
@@ -15,10 +15,10 @@ class TemperatureConverterService
         $this->predictions = $predictions;   
     }
 
-    public function standardizeValues(TemperatureScale $scale): void 
+    public function standardizeValues(TemperatureScaleEnum $scale): void 
     {
-        foreach ($this->predictions->jsonSerialize() as $prediction) {
-            switch ($prediction->getScale()) {
+        foreach ($this->predictions as $prediction) {
+            switch ($prediction->getScale()->getScale()) {
                 case 'celsius':
                     $convertedValue = self::convertFromCelsius($prediction->getTemp(), $scale);
                     break;
@@ -29,7 +29,7 @@ class TemperatureConverterService
                     $convertedValue = self::convertFromKelvin($prediction->getTemp(), $scale);
                     break;
                 default:
-                    throw new IncorrectTemperatureException('A escala ' . $prediction->getScale() . ' não pode ser convertida para ' . ucfirst($scale->getScale()));
+                    throw new IncorrectTemperatureException('A escala ' . $prediction->getScale()->getScale() . ' não pode ser convertida para ' . ucfirst($scale->getScale()));
             }
 
             $prediction->setTemp($convertedValue);
@@ -37,7 +37,7 @@ class TemperatureConverterService
         }
     }
 
-    private static function convertFromCelsius(int $value, TemperatureScale $to)
+    private static function convertFromCelsius(int $value, TemperatureScaleEnum $to)
     {
         switch ($to->getScale()) {
             case 'celsius':
@@ -49,7 +49,7 @@ class TemperatureConverterService
         }
     }
 
-    private static function convertFromFahrenheit(int $value, TemperatureScale $to)
+    private static function convertFromFahrenheit(int $value, TemperatureScaleEnum $to)
     {
         switch ($to->getScale()) {
             case 'celsius':
@@ -61,7 +61,7 @@ class TemperatureConverterService
         }
     }
 
-    private static function convertFromKelvin(int $value, TemperatureScale $to)
+    private static function convertFromKelvin(int $value, TemperatureScaleEnum $to)
     {
         switch ($to->getScale()) {
             case 'celsius':

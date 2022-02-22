@@ -4,54 +4,47 @@ namespace App\Collections;
 
 use App\Models\Prediction;
 
-class Predictions implements \Iterator, \Countable, \JsonSerializable
+class Predictions implements \Iterator, \Countable
 {
     private $predictions;
-    private $position;
 
     public function __construct()
     {
         $this->predictions = [];
-        $this->position    = 0;
     }
 
-    public function addPrediction(Prediction $prediction)
+    public function add(Prediction $prediction)
     {
         $this->predictions[] = $prediction;
     }
 
     public function rewind(): void
     {
-        $this->position = 0;
+        reset($this->predictions);
     }
     
     public function current(): Prediction
     {
-        return $this->predictions[$this->position];
+        return current($this->predictions);
     }
 
     public function key(): int
     {
-        return $this->position;
+        return key($this->predictions);
     }
 
     public function next(): void
     {
-        $this->position += 1;
+        next($this->predictions);
     }
 
     public function valid(): bool
     {
-        return isset($this->predictions[$this->position]);
+        return current($this->predictions) !== false;
     }
 
     public function count(): int
     {
         return count($this->predictions);
-    }
-
-    public function jsonSerialize(): array
-    {
-        return $this->predictions;
     }
 }

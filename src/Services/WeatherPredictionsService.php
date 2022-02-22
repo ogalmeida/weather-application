@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
+use App\Collections\WeatherSources;
 use App\Collections\Predictions;
-use App\Models\WeatherSources;
+use App\Factories\DataSourceFactory;
 
 class WeatherPredictionsService
 {
@@ -18,18 +19,14 @@ class WeatherPredictionsService
 
     public function getPredictions(): Predictions
     {
-        $predictions = new Predictions();
+        $predictions = new Predictions;
+        $factory = new DataSourceFactory;
 
-        foreach ($this->weatherSources->getSources() as $source) {
-            $this->fetchSourcePrediction($source, $predictions);
+        foreach ($this->weatherSources as $source) {
+            $repository = $factory->create($source, $predictions);
+            $repository->fetchWeatherInformation($this->city);
         }
 
         return $predictions;
-    }
-
-    private function fetchSourcePrediction(string $source, Predictions $predictions): void
-    {
-        $obj = new $source($predictions);
-        $obj->fetchWeatherInformation($this->city);
     }
 }

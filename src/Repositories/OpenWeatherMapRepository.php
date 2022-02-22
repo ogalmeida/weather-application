@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Enums\TemperatureScale;
+use App\Enums\TemperatureScaleEnum;
 use Weather;
 use App\Models\Prediction;
 use App\Collections\Predictions;
@@ -21,8 +21,8 @@ class OpenWeatherMapRepository implements DataSourceRepositoryInterface
     {   
         $data = $this->getData();
         
-        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], TemperatureScale::kelvin());
-        $this->predictions->addPrediction($prediction);
+        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], TemperatureScaleEnum::kelvin());
+        $this->predictions->add($prediction);
     }
 
     private function getData(): array

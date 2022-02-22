@@ -16,13 +16,17 @@ class CalculateWeatherPredictionService
 
     public function calculatePrediction(): Prediction
     {
+        $this->predictions->rewind();
+        $city = $this->predictions->current()->getCity();
+        $scale = $this->predictions->current()->getScale();
+
         $predictionMedia = 0;
-        foreach ($this->predictions->jsonSerialize() as $prediction) {
+        foreach ($this->predictions as $prediction) {
             $predictionMedia += $prediction->getTemp();
         }
 
         $predictionMedia /= $this->predictions->count();
 
-        return new Prediction(round($predictionMedia, 2), $this->predictions->current()->getCity(), $this->predictions->current()->getScale());
+        return new Prediction(round($predictionMedia, 2), $city, $scale);
     }
 }
