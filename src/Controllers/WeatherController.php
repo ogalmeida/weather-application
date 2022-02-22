@@ -26,7 +26,6 @@ class WeatherController
         
         $weatherPredictions = new WeatherPredictionsService($sourceCollection, $params['city']);
         $predictions = $weatherPredictions->getPredictions();
-            $weatherSourcesObj->setSources($weatherSources);
 
         $temperatureStandardize = new TemperatureConverterService($predictions);
         $temperatureStandardize->standardizeValues(TemperatureScaleEnum::celsius());
