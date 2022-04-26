@@ -19,10 +19,7 @@ class WeatherController
         }
 
         $weatherSources = [DataSourceEnum::climaTempo(), DataSourceEnum::bbc(), DataSourceEnum::openWeather()];
-        $sourceCollection = new WeatherSources;
-        foreach ($weatherSources as $source) {
-            $sourceCollection->add($source);
-        }
+        $sourceCollection = new WeatherSources($weatherSources);
         
         $weatherPredictions = new WeatherPredictionsService($sourceCollection, $params['city']);
         $predictions = $weatherPredictions->getPredictions();
