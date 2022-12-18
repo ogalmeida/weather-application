@@ -3,61 +3,47 @@
 namespace App\Repositories;
 
 use App\Enums\TemperatureScaleEnum;
-use App\Models\Prediction;
-use App\Collections\Predictions;
-use App\Repositories\DataSourceRepositoryInterface;
+use App\Entity\Prediction;
+use App\Exceptions\CityNotFoundException;
+use App\Repositories\Contract\WeatherDataSourceRepositoryInterface;
+use App\Exceptions\WeatherDataSourceConnectionException;
 
-class BBCWeatherRepository implements DataSourceRepositoryInterface
+class BBCWeatherRepository implements WeatherDataSourceRepositoryInterface
 {
     private const FILE_PATH = __DIR__ . '/../../data/bbc.xml';
-    private $predictions;
 
-    public function __construct(Predictions $predictions)
+    /**
+     * @throws CityNotFoundException
+     * @throws WeatherDataSourceConnectionException
+     */
+    public function getPredictionByCity(string $city): Prediction
     {
-        $this->predictions = $predictions;
+        $fileContent = $this->loadFileContent();
+
+        $dataFromCity = $fileContent[$city];
+
+        if (null === $dataFromCity) {
+            throw new CityNotFoundException();
+        }
+
+        return Prediction::fromArray([
+            'city' => $dataFromCity['name'],
+            'temp' => (float) $dataFromCity['temperature'],
+            'scale' => TemperatureScaleEnum::celsius(),
+        ]);
     }
 
-    public function fetchWeatherInformation(string $city): void
-    {
-        $data = $this->getData();
-        
-        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], TemperatureScaleEnum::celsius());
-
-        $this->predictions->add($prediction);
-    }
-
-    private function getData(): array
-    {
-        $fileContent = $this->readFile();
-
-        return $this->standardizeData($fileContent);
-    }
-
-    private function readFile(): array
+    private function loadFileContent(): array
     {
         $fileContent = file_get_contents(self::FILE_PATH);
 
-        $returnContent = [];
-        if ($fileContent !== false) {
-            $fileContent    = simplexml_load_string($fileContent);
-            $fileContent    = json_encode($fileContent);
-            $returnContent  = json_decode($fileContent, true);
+        if (false === $fileContent) {
+            throw new WeatherDataSourceConnectionException();
         }
 
-        return $returnContent;
-    }
+        $fileContent = simplexml_load_string($fileContent);
+        $fileContent = json_decode(json_encode($fileContent), true);
 
-    private function standardizeData(array $weatherInformations): array
-    {
-        $finalData = [];
-
-        foreach ($weatherInformations as $city => $weather) {
-            $finalData[$city] = [
-                'name' => $weather['name'],
-                'temp' => round($weather['temperature'], 2)
-            ];
-        }
-
-        return $finalData;
+        return $fileContent;
     }
 }

@@ -6,7 +6,7 @@ use App\Repositories\BBCWeatherRepository;
 use App\Repositories\ClimaTempoWeatherRepository;
 use App\Repositories\OpenWeatherMapRepository;
 
-class DataSourceEnum
+class WeatherDataSourceEnum
 {
     private $source;
 

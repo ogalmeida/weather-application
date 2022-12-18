@@ -2,9 +2,9 @@
 
 namespace App\Collections;
 
-use App\Models\Prediction;
+use App\Entity\Prediction;
 
-class Predictions extends Collection
+class PredictionCollection extends Collection
 {
     protected string $allowedType = Prediction::class;
 }

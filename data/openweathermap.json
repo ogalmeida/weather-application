@@ -1,44 +1,44 @@
 {
-    "catalao":{
-        "name":"Catalão",
-        "country":"BR",
-        "coord":{
-            "lon":-47.946388,
-            "lat":-18.165831
+    "catalao": {
+        "name": "Catalão",
+        "country": "BR",
+        "coord": {
+            "lon": -47.946388,
+            "lat": -18.165831
         },
-        "time":1489490978,
-        "temperatures":{
-            "temp":297.714,
-            "temp_min":297.714,
-            "temp_max":297.714
+        "time": 1489490978,
+        "temperatures": {
+            "temp": 320.714,
+            "temp_min": 297.714,
+            "temp_max": 330.714
         }
     },
-    "goiania":{
-        "name":"Goiânia",
-        "country":"BR",
-        "coord":{
-            "lon":-49.253891,
-            "lat":-16.67861
+    "goiania": {
+        "name": "Goiânia",
+        "country": "BR",
+        "coord": {
+            "lon": -49.253891,
+            "lat": -16.67861
         },
-        "time":1489490930,
-        "temperatures":{
-            "temp":295.15,
-            "temp_min":295.15,
-            "temp_max":295.15
+        "time": 1489490930,
+        "temperatures": {
+            "temp": 295.15,
+            "temp_min": 295.15,
+            "temp_max": 295.15
         }
     },
-    "uberlandia":{
-        "name":"Uberlândia",
-        "country":"BR",
-        "coord":{
-            "lon":-48.277222,
-            "lat":-18.91861
+    "uberlandia": {
+        "name": "Uberlândia",
+        "country": "BR",
+        "coord": {
+            "lon": -48.277222,
+            "lat": -18.91861
         },
-        "time":1489490920,
-        "temperatures":{
-            "temp":299.014,
-            "temp_min":299.014,
-            "temp_max":299.014
+        "time": 1489490920,
+        "temperatures": {
+            "temp": 299.014,
+            "temp_min": 299.014,
+            "temp_max": 299.014
         }
     }
 }

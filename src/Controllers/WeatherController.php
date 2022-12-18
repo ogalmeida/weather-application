@@ -7,32 +7,32 @@ use App\Collections\WeatherSources;
 use App\Enums\DataSourceEnum;
 use App\Services\CalculateWeatherPredictionService;
 use App\Services\TemperatureConverterService;
-use App\Services\WeatherPredictionsService;
+use App\Services\WeatherPredictionService;
 
 class WeatherController
 {
+    private WeatherPredictionService $weatherService;
+
+    public function __construct()
+    {
+        $this->weatherService = new WeatherPredictionService();
+    }
+
     public function getWeather(array $params): void
     {
-        if (!isset($params['city'])) {
+        $city = $params['city'] ?? null;
+        if (null === $city) {
             echo "A cidade não foi informada.";
             die();
         }
 
-        $weatherSources = [DataSourceEnum::climaTempo(), DataSourceEnum::bbc(), DataSourceEnum::openWeather()];
-        $sourceCollection = new WeatherSources($weatherSources);
-        
-        $weatherPredictions = new WeatherPredictionsService($sourceCollection, $params['city']);
-        $predictions = $weatherPredictions->getPredictions();
+        $prediction = $this->weatherService
+            ->getPredictionByCity($city, TemperatureScaleEnum::celsius());
 
-        $temperatureStandardize = new TemperatureConverterService($predictions);
-        $temperatureStandardize->standardizeValues(TemperatureScaleEnum::celsius());
-
-        $predictionCalculator = new CalculateWeatherPredictionService($predictions);
-        $prediction = $predictionCalculator->calculatePrediction();
-        
         echo json_encode([
-            'temp' => $prediction->getTemp(),
-            'city' => $prediction->getCity()
+            'temp' => $prediction->temp(),
+            'city' => $prediction->city(),
+            'scale' => sprintf('%s', $prediction->scale())
         ]);
     }
 }

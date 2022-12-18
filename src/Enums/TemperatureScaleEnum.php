@@ -30,7 +30,7 @@ class TemperatureScaleEnum
         return new self(static::CELSIUS);
     }
 
-    public function getScale(): string
+    public function __toString()
     {
         return $this->scale;
     }

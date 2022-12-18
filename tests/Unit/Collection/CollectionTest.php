@@ -3,7 +3,9 @@
 namespace Tests\Unit\Collection;
 
 use App\Collections\Collection;
+use App\Collections\PredictionCollection;
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 
 class CollectionTest extends TestCase
 {
@@ -56,5 +58,25 @@ class CollectionTest extends TestCase
         $collection = new Collection();
 
         $this->assertNull($collection->first());
+    }
+
+    public function testShouldThrowInvalidArgumentExceptionWhenTypeIsInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->expectExceptionMessage('Invalid item type, expected App\Entity\Prediction, given integer');
+
+        new PredictionCollection([1, 2, 3]);
+    }
+
+    public function testShouldThrowInvalidArgumentExceptionWhenAddingAnInvalidItem()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->expectExceptionMessage('Invalid item type, expected App\Entity\Prediction, given integer');
+
+        $collection = new PredictionCollection([$this->createStub(Prediction::class)]);
+
+        $collection->add(1);
     }
 }

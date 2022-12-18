@@ -2,68 +2,53 @@
 
 namespace App\Repositories;
 
+use App\Entity\Prediction;
 use App\Enums\TemperatureScaleEnum;
-use App\Models\Prediction;
-use App\Collections\Predictions;
-use App\Repositories\DataSourceRepositoryInterface;
+use App\Repositories\Contract\WeatherDataSourceRepositoryInterface;
+use App\Exceptions\WeatherDataSourceConnectionException;
+use App\Exceptions\CityNotFoundException;
 
-class ClimaTempoWeatherRepository implements DataSourceRepositoryInterface
+class ClimaTempoWeatherRepository implements WeatherDataSourceRepositoryInterface
 {
     private const FILE_PATH = __DIR__ . '/../../data/climatempo.csv';
-    private $predictions;
 
-    public function __construct(Predictions $predictions)
+    public function getPredictionByCity(string $city): Prediction
     {
-        $this->predictions = $predictions;
+        $fileContent = $this->loadFileContent();
+
+        $dataFromCity = $fileContent[$city];
+
+        if (null === $dataFromCity) {
+            throw new CityNotFoundException();
+        }
+
+        return Prediction::fromArray([
+            'city' => $dataFromCity['name'],
+            'temp' => (float) $dataFromCity['temp'],
+            'scale' => TemperatureScaleEnum::fahrenheit(),
+        ]);
     }
 
-    public function fetchWeatherInformation(string $city): void
-    {
-        $data = $this->getData();
-        
-        $prediction = new Prediction($data[$city]['temp'], $data[$city]['name'], TemperatureScaleEnum::fahrenheit());
-        
-        $this->predictions->add($prediction);
-    }
-
-    private function getData(): array
-    {
-        $fileContent = $this->readFile();
-
-        return $this->standardizeData($fileContent);
-    }
-
-    private function readFile(): array
+    private function loadFileContent(): array
     {
         $file = fopen(self::FILE_PATH, 'r');
 
-        $returnArray = [];
-        if ($file !== false) {
-            $fields = array_flip(fgetcsv($file));
-            while (($data = fgetcsv($file, 0, ',')) !== FALSE) {
-                $returnArray[$data[$fields['_key']]] = [
-                    'name'    => $data[$fields['name']],
-                    'temp'    => $data[$fields['temp']],
-                    'country' => $data[$fields['country']],
-                ];
-            }
-            fclose($file);
+        if (false === $file) {
+            throw new WeatherDataSourceConnectionException();
         }
 
-        return $returnArray;
-    }
+        $fields = array_flip(fgetcsv($file));
 
-    private function standardizeData(array $weatherInformations): array
-    {
-        $finalData = [];
-
-        foreach ($weatherInformations as $city => $weather) {
-            $finalData[$city] = [
-                'name' => $weather['name'],
-                'temp' => round(floatval($weather['temp']), 2)
+        $output = [];
+        while (($data = fgetcsv($file, 0, ',')) !== FALSE) {
+            $output[$data[$fields['_key']]] = [
+                'name'    => $data[$fields['name']],
+                'temp'    => $data[$fields['temp']],
+                'country' => $data[$fields['country']],
             ];
         }
+        fclose($file);
 
-        return $finalData;
+        return $output;
     }
 }
